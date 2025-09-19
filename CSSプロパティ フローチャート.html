@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)file:///C:/Users/keeey/Desktop/step1/step1week5/css-property-flowchart.html -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSSプロパティ フローチャート</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .flowchart {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .main-category {
+            background: #4A90E2;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .main-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.5);
+        }
+        
+        .branch {
+            margin-top: 20px;
+        }
+        
+        .sub-category {
+            background: #5CAFEF;
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .sub-category::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background: #333;
+        }
+        
+        .sub-category:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(92, 175, 239, 0.4);
+        }
+        
+        .properties {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .properties.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .property-item {
+            background: #87CEEB;
+            color: #333;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4A90E2;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            font-weight: 600;
+        }
+        
+        .property-item:hover {
+            background: #ADD8E6;
+            transform: translateX(5px);
+        }
+        
+        .property-item::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            color: #4A90E2;
+        }
+        
+        .property-values {
+            margin-top: 10px;
+            margin-left: 20px;
+            display: none;
+        }
+        
+        .property-values.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .value-item {
+            background: #FFE8B6;
+            color: #333;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            border-left: 3px solid #FFA500;
+            font-size: 0.9em;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .value-item:hover {
+            background: #FFD700;
+            transform: translateX(3px);
+        }
+        
+        .value-item::before {
+            content: '▸';
+            position: absolute;
+            left: -15px;
+            color: #FFA500;
+        }
+        
+        .value-example {
+            color: #666;
+            font-size: 0.85em;
+            font-style: italic;
+            margin-left: 10px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            z-index: 1000;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .property-item:hover .tooltip {
+            opacity: 1;
+        }
+        
+        .legend {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .legend h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin: 5px 15px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .legend-main {
+            background: #4A90E2;
+            color: white;
+        }
+        
+        .legend-sub {
+            background: #5CAFEF;
+            color: white;
+        }
+        
+        .legend-prop {
+            background: #87CEEB;
+            color: #333;
+        }
+        
+        .search-box {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .search-box input {
+            padding: 12px 20px;
+            font-size: 1em;
+            border: 2px solid #4A90E2;
+            border-radius: 25px;
+            width: 300px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.3);
+        }
+        
+        .highlight {
+            background: #FFE066 !important;
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 CSSプロパティ マスターチャート</h1>
+        
+        <div style="background: #E8F4FD; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2196F3;">
+            <h3 style="margin: 0 0 10px 0; color: #1976D2;">💡 プロパティの重要な相互関係</h3>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h4 style="color: #FF6B6B; margin: 5px 0;">📦 Flexbox関連</h4>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #FF6B6B; color: white; padding: 1px 4px; border-radius: 3px;">display: flex</span> 
+                        → justify-content, align-items 等が使用可
+                    </p>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.8em; padding-left: 10px; border-left: 2px solid #FF6B6B;">
+                        <strong>justify-content</strong>: 主軸方向（横並びなら→）<br>
+                        <strong>align-items</strong>: 交差軸方向（横並びなら↓）
+                    </p>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #9B59B6; color: white; padding: 1px 4px; border-radius: 3px;">子要素</span> 
+                        → flex, align-self, order が使用可
+                    </p>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h4 style="color: #3498DB; margin: 5px 0;">📍 Position関連</h4>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #3498DB; color: white; padding: 1px 4px; border-radius: 3px;">position: absolute/fixed</span> 
+                        → top, left, right, bottom が有効
+                    </p>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #3498DB; color: white; padding: 1px 4px; border-radius: 3px;">position: relative/absolute</span> 
+                        → z-index が有効
+                    </p>
+                </div>
+                <div style="flex: 1; min-width: 250px;">
+                    <h4 style="color: #E67E22; margin: 5px 0;">✨ その他の関係</h4>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #E67E22; color: white; padding: 1px 4px; border-radius: 3px;">overflow: hidden</span> 
+                        → 子のborder-radius が効く
+                    </p>
+                    <p style="margin: 3px 0; color: #555; font-size: 0.9em;">
+                        <span style="background: #27AE60; color: white; padding: 1px 4px; border-radius: 3px;">transform</span> 
+                        → position: fixed の基準が変わる
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="プロパティを検索...">
+        </div>
+        
+        <div class="flowchart">
+            <!-- レイアウト系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    レイアウト系
+                </div>
+                <div class="properties active">
+                    <div class="sub-category">Display系</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        display
+                        <div class="property-values">
+                            <div class="value-item">block <span class="value-example">// ブロック要素</span></div>
+                            <div class="value-item" style="background: #FFE8CC; border-left-color: #FF9800;">
+                                inline 
+                                <span class="value-example">// インライン要素</span>
+                                <span style="background: #FF9800; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em;">width/height無効</span>
+                            </div>
+                            <div class="value-item">inline-block <span class="value-example">// インラインブロック</span></div>
+                            <div class="value-item" style="background: #FFB6C1; border-left-color: #FF6B6B;">
+                                flex 
+                                <span class="value-example">// フレックスボックス</span>
+                                <span style="background: #FF6B6B; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em; margin-left: 5px;">→ Flexboxプロパティ使用可</span>
+                            </div>
+                            <div class="value-item" style="background: #FFB6C1; border-left-color: #FF6B6B;">
+                                grid 
+                                <span class="value-example">// グリッドレイアウト</span>
+                                <span style="background: #FF6B6B; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em; margin-left: 5px;">→ Gridプロパティ使用可</span>
+                            </div>
+                            <div class="value-item">none <span class="value-example">// 非表示</span></div>
+                            <div class="value-item">table <span class="value-example">// テーブル要素</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        visibility
+                        <div class="property-values">
+                            <div class="value-item">visible <span class="value-example">// 表示</span></div>
+                            <div class="value-item">hidden <span class="value-example">// 非表示（スペース維持）</span></div>
+                            <div class="value-item">collapse <span class="value-example">// テーブル要素で使用</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        opacity
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// 完全透明</span></div>
+                            <div class="value-item">0.5 <span class="value-example">// 半透明</span></div>
+                            <div class="value-item">1 <span class="value-example">// 完全不透明</span></div>
+                            <div class="value-item">0.1〜0.9 <span class="value-example">// 任意の透明度</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">Position系</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        position
+                        <div class="property-values">
+                            <div class="value-item">static <span class="value-example">// 通常配置（デフォルト）</span></div>
+                            <div class="value-item" style="background: #B3E5FC; border-left-color: #3498DB;">
+                                relative 
+                                <span class="value-example">// 相対配置</span>
+                                <span style="background: #3498DB; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em;">→ z-index有効</span>
+                            </div>
+                            <div class="value-item" style="background: #B3E5FC; border-left-color: #3498DB;">
+                                absolute 
+                                <span class="value-example">// 絶対配置</span>
+                                <span style="background: #3498DB; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em;">→ top/left/z-index有効</span>
+                            </div>
+                            <div class="value-item" style="background: #B3E5FC; border-left-color: #3498DB;">
+                                fixed 
+                                <span class="value-example">// 固定配置</span>
+                                <span style="background: #3498DB; color: white; padding: 1px 4px; border-radius: 3px; font-size: 0.7em;">→ top/left/z-index有効</span>
+                            </div>
+                            <div class="value-item">sticky <span class="value-example">// 粘着配置</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        top/right/bottom/left
+                        <span style="color: #3498DB; font-size: 0.8em;">‼position: static以外で有効</span>
+                        <div class="property-values">
+                            <div class="value-item">auto <span class="value-example">// 自動配置</span></div>
+                            <div class="value-item">0 <span class="value-example">// 端に配置</span></div>
+                            <div class="value-item">10px <span class="value-example">// ピクセル指定</span></div>
+                            <div class="value-item">50% <span class="value-example">// パーセント指定</span></div>
+                            <div class="value-item">-20px <span class="value-example">// 負の値も可能</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        z-index
+                        <span style="color: #3498DB; font-size: 0.8em;">‼position: static以外で有効</span>
+                        <div class="property-values">
+                            <div class="value-item">auto <span class="value-example">// 自動</span></div>
+                            <div class="value-item">1 <span class="value-example">// 正の整数</span></div>
+                            <div class="value-item">999 <span class="value-example">// 大きい値で前面</span></div>
+                            <div class="value-item">-1 <span class="value-example">// 負の値で背面</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">Flexbox 
+                        <span style="background: #FF6B6B; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 10px;">display: flex が必要</span>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        justify-content
+                        <span style="color: #FF6B6B; font-size: 0.8em;">※親要素用【主軸方向（横並びなら横）の配置】</span>
+                        <div class="property-values">
+                            <div class="value-item">flex-start <span class="value-example">// 横並び時：左寄せ / 縦並び時：上寄せ</span></div>
+                            <div class="value-item">flex-end <span class="value-example">// 横並び時：右寄せ / 縦並び時：下寄せ</span></div>
+                            <div class="value-item">center <span class="value-example">// 横並び時：横中央 / 縦並び時：縦中央</span></div>
+                            <div class="value-item">space-between <span class="value-example">// 両端配置（要素間に均等な空間）</span></div>
+                            <div class="value-item">space-around <span class="value-example">// 均等配置（要素の周りに均等な空間）</span></div>
+                            <div class="value-item">space-evenly <span class="value-example">// 完全均等配置（全ての空間が同じ）</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        align-items
+                        <span style="color: #FF6B6B; font-size: 0.8em;">※親要素用【交差軸方向（横並びなら縦）の配置】</span>
+                        <div class="property-values">
+                            <div class="value-item">flex-start <span class="value-example">// 横並び時：上寄せ / 縦並び時：左寄せ</span></div>
+                            <div class="value-item">flex-end <span class="value-example">// 横並び時：下寄せ / 縦並び時：右寄せ</span></div>
+                            <div class="value-item">center <span class="value-example">// 横並び時：縦中央 / 縦並び時：横中央</span></div>
+                            <div class="value-item">baseline <span class="value-example">// テキストのベースライン揃え</span></div>
+                            <div class="value-item">stretch <span class="value-example">// 交差軸方向いっぱいに伸ばす（デフォルト）</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        flex-direction
+                        <span style="color: #FF6B6B; font-size: 0.8em;">※親要素用【並ぶ方向を決める＝主軸を決める】</span>
+                        <div class="property-values">
+                            <div class="value-item">row <span class="value-example">// 横並び（→）主軸=横、交差軸=縦（デフォルト）</span></div>
+                            <div class="value-item">row-reverse <span class="value-example">// 横並び逆順（←）主軸=横、交差軸=縦</span></div>
+                            <div class="value-item">column <span class="value-example">// 縦並び（↓）主軸=縦、交差軸=横</span></div>
+                            <div class="value-item">column-reverse <span class="value-example">// 縦並び逆順（↑）主軸=縦、交差軸=横</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        flex-wrap
+                        <span style="color: #FF6B6B; font-size: 0.8em;">※親要素用</span>
+                        <div class="property-values">
+                            <div class="value-item">nowrap <span class="value-example">// 折り返さない（デフォルト）</span></div>
+                            <div class="value-item">wrap <span class="value-example">// 折り返す</span></div>
+                            <div class="value-item">wrap-reverse <span class="value-example">// 逆方向に折り返す</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">Flexbox子要素用
+                        <span style="background: #9B59B6; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 10px;">親がdisplay: flexのとき</span>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        flex
+                        <span style="color: #9B59B6; font-size: 0.8em;">※子要素用</span>
+                        <div class="property-values">
+                            <div class="value-item">1 <span class="value-example">// 均等に伸縮</span></div>
+                            <div class="value-item">0 <span class="value-example">// 伸縮しない</span></div>
+                            <div class="value-item">1 1 auto <span class="value-example">// grow shrink basis</span></div>
+                            <div class="value-item">0 0 200px <span class="value-example">// 固定幅200px</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        align-self
+                        <span style="color: #9B59B6; font-size: 0.8em;">※子要素用</span>
+                        <div class="property-values">
+                            <div class="value-item">auto <span class="value-example">// 親のalign-itemsに従う</span></div>
+                            <div class="value-item">flex-start <span class="value-example">// 上寄せ</span></div>
+                            <div class="value-item">flex-end <span class="value-example">// 下寄せ</span></div>
+                            <div class="value-item">center <span class="value-example">// 中央寄せ</span></div>
+                            <div class="value-item">stretch <span class="value-example">// 伸縮</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        order
+                        <span style="color: #9B59B6; font-size: 0.8em;">※子要素用</span>
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// デフォルト</span></div>
+                            <div class="value-item">-1 <span class="value-example">// 最初に移動</span></div>
+                            <div class="value-item">1 <span class="value-example">// 後ろに移動</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">Grid
+                        <span style="background: #FF6B6B; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-left: 10px;">display: grid が必要</span>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        grid-template-columns
+                        <div class="property-values">
+                            <div class="value-item">100px 200px 100px <span class="value-example">// 固定幅3列</span></div>
+                            <div class="value-item">1fr 2fr 1fr <span class="value-example">// 比率指定</span></div>
+                            <div class="value-item">repeat(3, 1fr) <span class="value-example">// 均等3列</span></div>
+                            <div class="value-item">repeat(auto-fit, minmax(200px, 1fr)) <span class="value-example">// レスポンシブ</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        grid-template-rows
+                        <div class="property-values">
+                            <div class="value-item">100px 200px <span class="value-example">// 固定高さ2行</span></div>
+                            <div class="value-item">auto 1fr <span class="value-example">// 自動と残り全部</span></div>
+                            <div class="value-item">repeat(3, 100px) <span class="value-example">// 100pxを3回</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        gap
+                        <div class="property-values">
+                            <div class="value-item">10px <span class="value-example">// 全方向10px</span></div>
+                            <div class="value-item">10px 20px <span class="value-example">// 行10px 列20px</span></div>
+                            <div class="value-item">1rem <span class="value-example">// rem単位</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ボックスモデル系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    ボックスモデル系
+                </div>
+                <div class="properties">
+                    <div class="sub-category">サイズ</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        width / height
+                        <div class="property-values">
+                            <div class="value-item">auto <span class="value-example">// 自動計算</span></div>
+                            <div class="value-item">100px <span class="value-example">// ピクセル指定</span></div>
+                            <div class="value-item">50% <span class="value-example">// 親要素に対する割合</span></div>
+                            <div class="value-item">100vw / 100vh <span class="value-example">// ビューポート単位</span></div>
+                            <div class="value-item">10em <span class="value-example">// フォントサイズ基準</span></div>
+                            <div class="value-item">10rem <span class="value-example">// ルート要素基準</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        max-width / max-height
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// 制限なし</span></div>
+                            <div class="value-item">500px <span class="value-example">// 固定値</span></div>
+                            <div class="value-item">100% <span class="value-example">// 親要素の100%まで</span></div>
+                            <div class="value-item">80vw <span class="value-example">// ビューポート幅の80%</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        min-width / min-height
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// デフォルト</span></div>
+                            <div class="value-item">200px <span class="value-example">// 最小サイズ指定</span></div>
+                            <div class="value-item">min-content <span class="value-example">// コンテンツの最小サイズ</span></div>
+                            <div class="value-item">max-content <span class="value-example">// コンテンツの最大サイズ</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">余白</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        margin
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// 余白なし</span></div>
+                            <div class="value-item">10px <span class="value-example">// 全方吁10px</span></div>
+                            <div class="value-item">10px 20px <span class="value-example">// 上下10px 左右20px</span></div>
+                            <div class="value-item">10px 20px 30px 40px <span class="value-example">// 上 右 下 左</span></div>
+                            <div class="value-item">auto <span class="value-example">// 自動（中央寄せに使用）</span></div>
+                            <div class="value-item">0 auto <span class="value-example">// 横中央寄せ</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        padding
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// 余白なし</span></div>
+                            <div class="value-item">10px <span class="value-example">// 全方吁10px</span></div>
+                            <div class="value-item">10px 20px <span class="value-example">// 上下10px 左右20px</span></div>
+                            <div class="value-item">5% <span class="value-example">// 親要素の幅に対する割合</span></div>
+                            <div class="value-item">1em 2em <span class="value-example">// em単位で指定</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        box-sizing
+                        <div class="property-values">
+                            <div class="value-item">content-box <span class="value-example">// デフォルト（padding/borderを除く）</span></div>
+                            <div class="value-item">border-box <span class="value-example">// padding/borderを含む</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">ボーダー</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        border
+                        <div class="property-values">
+                            <div class="value-item">1px solid #000 <span class="value-example">// 幅 スタイル 色</span></div>
+                            <div class="value-item">2px dashed red <span class="value-example">// 破線</span></div>
+                            <div class="value-item">3px dotted blue <span class="value-example">// 点線</span></div>
+                            <div class="value-item">none <span class="value-example">// ボーダーなし</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        border-radius
+                        <div class="property-values">
+                            <div class="value-item">0 <span class="value-example">// 角なし</span></div>
+                            <div class="value-item">5px <span class="value-example">// 全角5pxの丸み</span></div>
+                            <div class="value-item">50% <span class="value-example">// 円形</span></div>
+                            <div class="value-item">10px 20px <span class="value-example">// 対角ごとに指定</span></div>
+                            <div class="value-item">10px 20px 30px 40px <span class="value-example">// 各角個別指定</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        border-style
+                        <div class="property-values">
+                            <div class="value-item">solid <span class="value-example">// 実線</span></div>
+                            <div class="value-item">dashed <span class="value-example">// 破線</span></div>
+                            <div class="value-item">dotted <span class="value-example">// 点線</span></div>
+                            <div class="value-item">double <span class="value-example">// 二重線</span></div>
+                            <div class="value-item">groove <span class="value-example">// 立体的な溝</span></div>
+                            <div class="value-item">ridge <span class="value-example">// 立体的な山</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- テキスト・フォント系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    テキスト・フォント系
+                </div>
+                <div class="properties">
+                    <div class="sub-category">フォント</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        font-family
+                        <div class="property-values">
+                            <div class="value-item">sans-serif <span class="value-example">// ゴシック体</span></div>
+                            <div class="value-item">serif <span class="value-example">// 明朝体</span></div>
+                            <div class="value-item">monospace <span class="value-example">// 等幅フォント</span></div>
+                            <div class="value-item">"Helvetica", Arial <span class="value-example">// フォント名指定</span></div>
+                            <div class="value-item">"Yu Gothic", "ヒラギノ角ゴ" <span class="value-example">// 日本語フォント</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        font-size
+                        <div class="property-values">
+                            <div class="value-item">16px <span class="value-example">// ピクセル指定</span></div>
+                            <div class="value-item">1.2rem <span class="value-example">// ルート要素基準</span></div>
+                            <div class="value-item">1.5em <span class="value-example">// 親要素基準</span></div>
+                            <div class="value-item">120% <span class="value-example">// 親要素の120%</span></div>
+                            <div class="value-item">large / small <span class="value-example">// 相対サイズ</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        font-weight
+                        <div class="property-values">
+                            <div class="value-item">normal / 400 <span class="value-example">// 通常</span></div>
+                            <div class="value-item">bold / 700 <span class="value-example">// 太字</span></div>
+                            <div class="value-item">100〜900 <span class="value-example">// 数値指定</span></div>
+                            <div class="value-item">lighter <span class="value-example">// より細く</span></div>
+                            <div class="value-item">bolder <span class="value-example">// より太く</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        font-style
+                        <div class="property-values">
+                            <div class="value-item">normal <span class="value-example">// 標準</span></div>
+                            <div class="value-item">italic <span class="value-example">// イタリック体</span></div>
+                            <div class="value-item">oblique <span class="value-example">// 斜体</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">テキスト配置</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        text-align
+                        <div class="property-values">
+                            <div class="value-item">left <span class="value-example">// 左寄せ</span></div>
+                            <div class="value-item">center <span class="value-example">// 中央寄せ</span></div>
+                            <div class="value-item">right <span class="value-example">// 右寄せ</span></div>
+                            <div class="value-item">justify <span class="value-example">// 両端揃え</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        vertical-align
+                        <div class="property-values">
+                            <div class="value-item">baseline <span class="value-example">// ベースライン</span></div>
+                            <div class="value-item">top <span class="value-example">// 上揃え</span></div>
+                            <div class="value-item">middle <span class="value-example">// 中央揃え</span></div>
+                            <div class="value-item">bottom <span class="value-example">// 下揃え</span></div>
+                            <div class="value-item">super / sub <span class="value-example">// 上付き/下付き</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        line-height
+                        <div class="property-values">
+                            <div class="value-item">normal <span class="value-example">// デフォルト（約1.2）</span></div>
+                            <div class="value-item">1.5 <span class="value-example">// 数値（単位なし）</span></div>
+                            <div class="value-item">24px <span class="value-example">// 固定値</span></div>
+                            <div class="value-item">150% <span class="value-example">// パーセント</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        letter-spacing
+                        <div class="property-values">
+                            <div class="value-item">normal <span class="value-example">// デフォルト</span></div>
+                            <div class="value-item">0.1em <span class="value-example">// 少し広げる</span></div>
+                            <div class="value-item">2px <span class="value-example">// 固定値</span></div>
+                            <div class="value-item">-1px <span class="value-example">// 負の値で狭める</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">装飾</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        text-decoration
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// 装飾なし</span></div>
+                            <div class="value-item">underline <span class="value-example">// 下線</span></div>
+                            <div class="value-item">overline <span class="value-example">// 上線</span></div>
+                            <div class="value-item">line-through <span class="value-example">// 打消し線</span></div>
+                            <div class="value-item">underline dotted <span class="value-example">// 点線の下線</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        text-transform
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// 変換なし</span></div>
+                            <div class="value-item">uppercase <span class="value-example">// すべて大文字</span></div>
+                            <div class="value-item">lowercase <span class="value-example">// すべて小文字</span></div>
+                            <div class="value-item">capitalize <span class="value-example">// 先頭大文字</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        text-shadow
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// 影なし</span></div>
+                            <div class="value-item">2px 2px 4px #000 <span class="value-example">// X Y ぼかし 色</span></div>
+                            <div class="value-item">0 0 10px rgba(0,0,0,0.5) <span class="value-example">// 光彩効果</span></div>
+                            <div class="value-item">1px 1px 0 #fff <span class="value-example">// 縁取り効果</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        white-space
+                        <div class="property-values">
+                            <div class="value-item">normal <span class="value-example">// 自動折り返し</span></div>
+                            <div class="value-item">nowrap <span class="value-example">// 折り返しなし</span></div>
+                            <div class="value-item">pre <span class="value-example">// 改行・空白保持</span></div>
+                            <div class="value-item">pre-wrap <span class="value-example">// 改行・空白保持+折り返し</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-category">リスト</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        list-style
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// マーカーなし（点を消す）</span></div>
+                            <div class="value-item">disc <span class="value-example">// 黒丸（デフォルト）</span></div>
+                            <div class="value-item">circle <span class="value-example">// 白丸</span></div>
+                            <div class="value-item">square <span class="value-example">// 四角</span></div>
+                            <div class="value-item">decimal <span class="value-example">// 数字（1, 2, 3...）</span></div>
+                            <div class="value-item">lower-alpha <span class="value-example">// 小文字（a, b, c...）</span></div>
+                            <div class="value-item">upper-roman <span class="value-example">// ローマ数字大文字（I, II, III...）</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        list-style-type
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// マーカーなし（点を消す）</span></div>
+                            <div class="value-item">disc <span class="value-example">// 黒丸</span></div>
+                            <div class="value-item">circle <span class="value-example">// 白丸</span></div>
+                            <div class="value-item">square <span class="value-example">// 四角</span></div>
+                            <div class="value-item">decimal <span class="value-example">// 数字</span></div>
+                            <div class="value-item">"\2713" <span class="value-example">// カスタム文字（チェックマーク）</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        list-style-position
+                        <div class="property-values">
+                            <div class="value-item">outside <span class="value-example">// テキストの外側（デフォルト）</span></div>
+                            <div class="value-item">inside <span class="value-example">// テキストの内側</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        list-style-image
+                        <div class="property-values">
+                            <div class="value-item">none <span class="value-example">// 画像なし</span></div>
+                            <div class="value-item">url('icon.png') <span class="value-example">// カスタム画像をマーカーに</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 背景・色系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    背景・色系
+                </div>
+                <div class="properties">
+                    <div class="sub-category">色</div>
+                    <div class="property-item">
+                        color
+                        <span class="tooltip">文字色</span>
+                    </div>
+                    <div class="property-item">
+                        background-color
+                        <span class="tooltip">背景色</span>
+                    </div>
+                    
+                    <div class="sub-category">背景画像</div>
+                    <div class="property-item">
+                        background-image
+                        <span class="tooltip">背景画像の指定</span>
+                    </div>
+                    <div class="property-item">
+                        background-size
+                        <span class="tooltip">背景画像のサイズ</span>
+                    </div>
+                    <div class="property-item">
+                        background-position
+                        <span class="tooltip">背景画像の位置</span>
+                    </div>
+                    <div class="property-item">
+                        background-repeat
+                        <span class="tooltip">背景画像の繰り返し</span>
+                    </div>
+                    <div class="property-item">
+                        background-attachment
+                        <span class="tooltip">背景画像の固定</span>
+                    </div>
+                    
+                    <div class="sub-category">グラデーション</div>
+                    <div class="property-item">
+                        linear-gradient()
+                        <span class="tooltip">線形グラデーション</span>
+                    </div>
+                    <div class="property-item">
+                        radial-gradient()
+                        <span class="tooltip">円形グラデーション</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- アニメーション系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    アニメーション系
+                </div>
+                <div class="properties">
+                    <div class="sub-category">トランジション</div>
+                    <div class="property-item">
+                        transition
+                        <span class="tooltip">プロパティ変化のアニメーション</span>
+                    </div>
+                    <div class="property-item">
+                        transition-duration
+                        <span class="tooltip">アニメーション時間</span>
+                    </div>
+                    <div class="property-item">
+                        transition-timing-function
+                        <span class="tooltip">イージング関数</span>
+                    </div>
+                    
+                    <div class="sub-category">トランスフォーム</div>
+                    <div class="property-item" onclick="toggleValues(this)">
+                        transform
+                        <span style="color: #27AE60; font-size: 0.8em;">※新しいスタッキングコンテキスト作成</span>
+                        <div class="property-values">
+                            <div class="value-item">rotate(45deg) <span class="value-example">// 回転</span></div>
+                            <div class="value-item">scale(1.5) <span class="value-example">// 拡大縮小</span></div>
+                            <div class="value-item">translate(10px, 20px) <span class="value-example">// 移動</span></div>
+                            <div class="value-item">skew(10deg) <span class="value-example">// 傾斜</span></div>
+                            <div class="value-item">rotate(45deg) scale(1.2) <span class="value-example">// 複数組み合わせ</span></div>
+                        </div>
+                    </div>
+                    <div class="property-item">
+                        rotate()
+                        <span class="tooltip">回転</span>
+                    </div>
+                    <div class="property-item">
+                        scale()
+                        <span class="tooltip">拡大縮小</span>
+                    </div>
+                    <div class="property-item">
+                        translate()
+                        <span class="tooltip">移動</span>
+                    </div>
+                    
+                    <div class="sub-category">アニメーション</div>
+                    <div class="property-item">
+                        animation
+                        <span class="tooltip">キーフレームアニメーション</span>
+                    </div>
+                    <div class="property-item">
+                        @keyframes
+                        <span class="tooltip">アニメーションの定義</span>
+                    </div>
+                    <div class="property-item">
+                        animation-duration
+                        <span class="tooltip">アニメーション時間</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- その他効果系 -->
+            <div class="branch">
+                <div class="main-category" onclick="toggleSection(this)">
+                    その他効果系
+                </div>
+                <div class="properties">
+                    <div class="sub-category">影</div>
+                    <div class="property-item">
+                        box-shadow
+                        <span class="tooltip">ボックスの影</span>
+                    </div>
+                    <div class="property-item">
+                        filter: drop-shadow()
+                        <span class="tooltip">画像の影</span>
+                    </div>
+                    
+                    <div class="sub-category">フィルター</div>
+                    <div class="property-item">
+                        filter
+                        <span class="tooltip">視覚効果フィルター</span>
+                    </div>
+                    <div class="property-item">
+                        blur()
+                        <span class="tooltip">ぼかし効果</span>
+                    </div>
+                    <div class="property-item">
+                        brightness()
+                        <span class="tooltip">明度調整</span>
+                    </div>
+                    <div class="property-item">
+                        grayscale()
+                        <span class="tooltip">グレースケール</span>
+                    </div>
+                    
+                    <div class="sub-category">その他</div>
+                    <div class="property-item">
+                        cursor
+                        <span class="tooltip">カーソルの形状</span>
+                    </div>
+                    <div class="property-item">
+                        overflow
+                        <span class="tooltip">はみ出し処理</span>
+                    </div>
+                    <div class="property-item">
+                        clip-path
+                        <span class="tooltip">要素のクリッピング</span>
+                    </div>
+                    <div class="property-item">
+                        user-select
+                        <span class="tooltip">選択可否</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>📖 使い方ガイド</h3>
+            <span class="legend-item legend-main">メインカテゴリ</span>
+            <span class="legend-item legend-sub">サブカテゴリ</span>
+            <span class="legend-item legend-prop">プロパティ</span>
+            <p style="margin-top: 15px; color: #666;">
+                💡 カテゴリをクリックで展開/折りたたみ | プロパティにホバーで説明表示 | 検索ボックスでプロパティ検索
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // セクションの開閉
+        function toggleSection(element) {
+            const properties = element.nextElementSibling;
+            properties.classList.toggle('active');
+            
+            // 他のセクションを閉じる（オプション）
+            // const allProperties = document.querySelectorAll('.properties');
+            // allProperties.forEach(prop => {
+            //     if (prop !== properties) {
+            //         prop.classList.remove('active');
+            //     }
+            // });
+        }
+        
+        // プロパティの値の表示/非表示切り替え
+        function toggleValues(element) {
+            const values = element.querySelector('.property-values');
+            if (values) {
+                values.classList.toggle('active');
+                
+                // 他のプロパティの値を閉じる（オプション）
+                // const allValues = document.querySelectorAll('.property-values');
+                // allValues.forEach(val => {
+                //     if (val !== values) {
+                //         val.classList.remove('active');
+                //     }
+                // });
+            }
+            event.stopPropagation();
+        }
+        
+        // 検索機能
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const allItems = document.querySelectorAll('.property-item');
+            const allSections = document.querySelectorAll('.properties');
+            
+            // 全セクションを開く
+            if (searchTerm) {
+                allSections.forEach(section => section.classList.add('active'));
+            }
+            
+            // 検索結果をハイライト
+            allItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (searchTerm && text.includes(searchTerm)) {
+                    item.classList.add('highlight');
+                } else {
+                    item.classList.remove('highlight');
+                }
+            });
+            
+            // 検索が空の場合、全セクションを閉じる
+            if (!searchTerm) {
+                allSections.forEach(section => section.classList.remove('active'));
+            }
+        });
+        
+        // 初期状態で最初のセクションを開く
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCategory = document.querySelector('.main-category');
+            if (firstCategory) {
+                toggleSection(firstCategory);
+            }
+        });
+        
+        // プロパティクリックでクリップボードにコピー
+        document.querySelectorAll('.property-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const propertyName = this.childNodes[0].textContent.trim();
+                navigator.clipboard.writeText(propertyName).then(() => {
+                    // コピー成功のフィードバック
+                    const originalBg = this.style.background;
+                    this.style.background = '#90EE90';
+                    setTimeout(() => {
+                        this.style.background = originalBg;
+                    }, 300);
+                });
+            });
+        });
+    </script>
+
+</body></html>
